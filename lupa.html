@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lupa Password - CryptoAnalytics</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 500px;
+            width: 100%;
+            padding: 50px 40px;
+            animation: slideUp 0.5s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .logo {
+            text-align: center;
+            font-size: 2rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+
+        .logo::before {
+            content: '₿';
+            font-size: 3rem;
+            display: block;
+            -webkit-text-fill-color: initial;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .step-indicator {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .step {
+            width: 40px;
+            height: 4px;
+            background: #e0e0e0;
+            border-radius: 2px;
+            transition: all 0.3s;
+        }
+
+        .step.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .form-section {
+            display: none;
+        }
+
+        .form-section.active {
+            display: block;
+            animation: fadeIn 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        h2 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 1.8rem;
+            text-align: center;
+        }
+
+        .subtitle {
+            color: #666;
+            text-align: center;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+
+        .icon-container {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .icon {
+            font-size: 4rem;
+            display: inline-block;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-wrapper input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .input-wrapper input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .input-icon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #999;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 15px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .btn-secondary:hover {
+            background: #f8f9ff;
+        }
+
+        .verification-input {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin: 30px 0;
+        }
+
+        .verification-input input {
+            width: 50px;
+            height: 55px;
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .verification-input input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .resend-code {
+            text-align: center;
+            margin-top: 20px;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .resend-code a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .resend-code a:hover {
+            text-decoration: underline;
+        }
+
+        .back-to-login {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .back-to-login a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .back-to-login a:hover {
+            text-decoration: underline;
+        }
+
+        .success-icon {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .success-icon::before {
+            content: '✓';
+            display: inline-block;
+            width: 80px;
+            height: 80px;
+            line-height: 80px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-size: 3rem;
+            border-radius: 50%;
+            animation: scaleIn 0.5s ease;
+        }
+
+        @keyframes scaleIn {
+            from {
+                transform: scale(0);
+            }
+            to {
+                transform: scale(1);
+            }
+        }
+
+        .password-requirements {
+            background: #f8f9ff;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+        }
+
+        .password-requirements h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+        }
+
+        .password-requirements ul {
+            list-style: none;
+            color: #666;
+        }
+
+        .password-requirements li {
+            margin-bottom: 5px;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .password-requirements li::before {
+            content: '•';
+            position: absolute;
+            left: 5px;
+        }
+
+        .timer {
+            text-align: center;
+            margin-top: 15px;
+            color: #999;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 40px 25px;
+            }
+
+            .verification-input input {
+                width: 45px;
+                height: 50px;
+                font-size: 1.3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">CryptoAnalytics</div>
+        
+        <div class="step-indicator">
+            <div class="step active" id="step1"></div>
+            <div class="step" id="step2"></div>
+            <div class="step" id="step3"></div>
+        </div>
+
+        <!-- Step 1: Email Input -->
+        <div class="form-section active" id="section1">
+            <div class="icon-container">
+                <div class="icon">🔒</div>
+            </div>
+            <h2>Lupa Password?</h2>
+            <p class="subtitle">Jangan khawatir! Masukkan email Anda dan kami akan mengirimkan kode verifikasi untuk reset password</p>
+            
+            <form id="emailForm">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <div class="input-wrapper">
+                        <input type="email" id="email" placeholder="nama@email.com" required>
+                        <span class="input-icon">📧</span>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn">Kirim Kode Verifikasi</button>
+                <button type="button" class="btn btn-secondary" onclick="goToLogin()">Kembali ke Login</button>
+            </form>
+        </div>
+
+        <!-- Step 2: Verification Code -->
+        <div class="form-section" id="section2">
+            <div class="icon-container">
+                <div class="icon">📬</div>
+            </div>
+            <h2>Verifikasi Email</h2>
+            <p class="subtitle">Kami telah mengirimkan kode 6 digit ke <strong id="emailDisplay"></strong></p>
+            
+            <form id="verificationForm">
+                <div class="verification-input">
+                    <input type="text" maxlength="1" class="code-input" id="code1">
+                    <input type="text" maxlength="1" class="code-input" id="code2">
+                    <input type="text" maxlength="1" class="code-input" id="code3">
+                    <input type="text" maxlength="1" class="code-input" id="code4">
+                    <input type="text" maxlength="1" class="code-input" id="code5">
+                    <input type="text" maxlength="1" class="code-input" id="code6">
+                </div>
+
+                <div class="timer" id="timer">Kode akan kadaluarsa dalam <strong>05:00</strong></div>
+
+                <button type="submit" class="btn">Verifikasi Kode</button>
+                
+                <div class="resend-code">
+                    Tidak menerima kode? <a href="#" onclick="resendCode(); return false;">Kirim ulang</a>
+                </div>
+            </form>
+        </div>
+
+        <!-- Step 3: New Password -->
+        <div class="form-section" id="section3">
+            <div class="icon-container">
+                <div class="icon">🔑</div>
+            </div>
+            <h2>Buat Password Baru</h2>
+            <p class="subtitle">Password baru Anda harus berbeda dari password sebelumnya</p>
+            
+            <form id="resetForm">
+                <div class="password-requirements">
+                    <h4>Password harus memenuhi:</h4>
+                    <ul>
+                        <li>Minimal 8 karakter</li>
+                        <li>Setidaknya 1 huruf besar</li>
+                        <li>Setidaknya 1 angka</li>
+                        <li>Setidaknya 1 karakter khusus</li>
+                    </ul>
+                </div>
+
+                <div class="form-group">
+                    <label for="newPassword">Password Baru</label>
+                    <div class="input-wrapper">
+                        <input type="password" id="newPassword" placeholder="Masukkan password baru" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="confirmPassword">Konfirmasi Password</label>
+                    <div class="input-wrapper">
+                        <input type="password" id="confirmPassword" placeholder="Ulangi password baru" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn">Reset Password</button>
+            </form>
+        </div>
+
+        <!-- Step 4: Success -->
+        <div class="form-section" id="section4">
+            <div class="success-icon"></div>
+            <h2>Password Berhasil Direset!</h2>
+            <p class="subtitle">Password Anda telah berhasil diubah. Silakan login dengan password baru Anda</p>
+            
+            <button class="btn" onclick="goToLogin()">Kembali ke Login</button>
+        </div>
+
+        <div class="back-to-login">
+            <a href="#" onclick="goToLogin(); return false;">← Kembali ke Login</a>
+        </div>
+    </div>
+
+    <script>
+        let currentStep = 1;
+        let userEmail = '';
+        let countdownInterval;
+
+        // Step 1: Email Form
+        document.getElementById('emailForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            userEmail = document.getElementById('email').value;
+            
+            // Simulasi pengiriman email
+            alert(`Kode verifikasi telah dikirim ke:\n${userEmail}\n\n(Simulasi: Kode = 123456)`);
+            
+            document.getElementById('emailDisplay').textContent = userEmail;
+            goToStep(2);
+            startCountdown();
+        });
+
+        // Step 2: Verification Form
+        document.getElementById('verificationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const code = Array.from({length: 6}, (_, i) => 
+                document.getElementById(`code${i+1}`).value
+            ).join('');
+            
+            if (code.length === 6) {
+                // Simulasi verifikasi
+                if (code === '123456') {
+                    clearInterval(countdownInterval);
+                    goToStep(3);
+                } else {
+                    alert('Kode verifikasi salah! Coba lagi.\n\n(Hint: 123456)');
+                }
+            }
+        });
+
+        // Auto focus next input
+        const codeInputs = document.querySelectorAll('.code-input');
+        codeInputs.forEach((input, index) => {
+            input.addEventListener('input', function() {
+                if (this.value.length === 1 && index < codeInputs.length - 1) {
+                    codeInputs[index + 1].focus();
+                }
+            });
+            
+            input.addEventListener('keydown', function(e) {
+                if (e.key === 'Backspace' && this.value === '' && index > 0) {
+                    codeInputs[index - 1].focus();
+                }
+            });
+        });
+
+        // Step 3: Reset Password Form
+        document.getElementById('resetForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            if (newPassword !== confirmPassword) {
+                alert('Password tidak cocok! Silakan coba lagi.');
+                return;
+            }
+            
+            if (newPassword.length < 6) {
+                alert('Password harus minimal 8 karakter!');
+                return;
+            }
+            
+            // Simulasi reset password
+            alert('Password sedang direset...');
+            setTimeout(() => {
+                goToStep(4);
+            }, 1000);
+        });
+
+        function goToStep(step) {
+            // Hide all sections
+            document.querySelectorAll('.form-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Update step indicator
+            document.querySelectorAll('.step').forEach((stepEl, index) => {
+                stepEl.classList.toggle('active', index < step);
+            });
+            
+            // Show target section
+            document.getElementById(`section${step}`).classList.add('active');
+            currentStep = step;
+        }
+
+        function startCountdown() {
+            let timeLeft = 300; // 5 minutes
+            
+            countdownInterval = setInterval(() => {
+                timeLeft--;
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                
+                document.getElementById('timer').innerHTML = 
+                    `Kode akan kadaluarsa dalam <strong>${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}</strong>`;
+                
+                if (timeLeft <= 0) {
+                    clearInterval(countdownInterval);
+                    alert('Kode verifikasi telah kadaluarsa. Silakan kirim ulang.');
+                }
+            }, 1000);
+        }
+
+        function resendCode() {
+            clearInterval(countdownInterval);
+            alert(`Kode verifikasi baru telah dikirim ke:\n${userEmail}\n\n(Simulasi: Kode = 123456)`);
+            
+            // Clear input fields
+            codeInputs.forEach(input => input.value = '');
+            codeInputs[0].focus();
+            
+            startCountdown();
+        }
+
+        function goToLogin() {
+            alert('Mengarahkan ke halaman login...');
+            // window.location.href = 'login.html';
+        }
+    </script>
+</body>
+</html>

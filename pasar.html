@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pasar Crypto - CryptoAnalytics</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            cursor: pointer;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: #667eea;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .page-header {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .page-subtitle {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        .market-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 0.3rem;
+        }
+
+        .stat-change {
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .stat-change.positive {
+            color: #28a745;
+        }
+
+        .stat-change.negative {
+            color: #dc3545;
+        }
+
+        .filters-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .filter-label {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .filter-select {
+            padding: 0.5rem 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .filter-select:focus {
+            border-color: #667eea;
+        }
+
+        .search-filter {
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .search-filter input {
+            width: 100%;
+            padding: 0.5rem 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .search-filter input:focus {
+            border-color: #667eea;
+        }
+
+        .market-table-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            overflow-x: auto;
+        }
+
+        .market-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .market-table thead {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .market-table th {
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .market-table th:first-child {
+            border-radius: 10px 0 0 0;
+        }
+
+        .market-table th:last-child {
+            border-radius: 0 10px 0 0;
+        }
+
+        .market-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .market-table tbody tr {
+            transition: background 0.3s ease;
+            cursor: pointer;
+        }
+
+        .market-table tbody tr:hover {
+            background: #f8f9fa;
+        }
+
+        .rank-cell {
+            font-weight: bold;
+            color: #666;
+        }
+
+        .coin-cell {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .coin-icon {
+            width: 35px;
+            height: 35px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            font-size: 1.1rem;
+        }
+
+        .coin-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .coin-name {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .coin-symbol {
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        .price-cell {
+            font-weight: 600;
+            font-size: 1.05rem;
+        }
+
+        .change-cell {
+            font-weight: 600;
+            padding: 0.3rem 0.8rem;
+            border-radius: 6px;
+            display: inline-block;
+        }
+
+        .change-cell.positive {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .change-cell.negative {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .sparkline {
+            width: 100px;
+            height: 40px;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .page-btn {
+            padding: 0.6rem 1.2rem;
+            border: 2px solid #667eea;
+            background: white;
+            color: #667eea;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .page-btn:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .page-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: transparent;
+        }
+
+        .page-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .page-info {
+            color: white;
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            .nav {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 1rem;
+            }
+
+            .page-title {
+                font-size: 1.8rem;
+            }
+
+            .filters-section {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .filter-group {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .market-table-container {
+                padding: 1rem;
+            }
+
+            .market-table {
+                font-size: 0.9rem;
+            }
+
+            .market-table th,
+            .market-table td {
+                padding: 0.7rem 0.5rem;
+            }
+
+            .coin-icon {
+                width: 30px;
+                height: 30px;
+                font-size: 0.9rem;
+            }
+
+            .sparkline {
+                width: 60px;
+                height: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav">
+            <div class="logo" onclick="window.location.href='index.html'">CryptoAnalytics</div>
+            <ul class="nav-links">
+                <li><a href="index.html">Beranda</a></li>
+                <li><a href="#pasar" class="active">Pasar</a></li>
+                <li><a href="portofolio.html">Portofolio</a></li>
+                <li><a href="berita.html">Berita</a></li>
+                <li><a href="#">Tools</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="container">
+        <div class="page-header">
+            <h1 class="page-title">📊 Pasar Cryptocurrency</h1>
+            <p class="page-subtitle">Data real-time dari 1000+ cryptocurrency dengan volume perdagangan tertinggi</p>
+        </div>
+
+        <div class="market-stats">
+            <div class="stat-card">
+                <div class="stat-label">Total Market Cap</div>
+                <div class="stat-value">$2.45T</div>
+                <div class="stat-change positive">+3.24%</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">24h Volume</div>
+                <div class="stat-value">$125.8B</div>
+                <div class="stat-change positive">+8.12%</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">BTC Dominance</div>
+                <div class="stat-value">48.9%</div>
+                <div class="stat-change negative">-0.45%</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Active Cryptos</div>
+                <div class="stat-value">12,458</div>
+                <div class="stat-change positive">+127</div>
+            </div>
+        </div>
+
+        <div class="filters-section">
+            <div class="filter-group">
+                <span class="filter-label">Kategori:</span>
+                <select class="filter-select" id="categoryFilter" onchange="filterMarket()">
+                    <option value="all">Semua</option>
+                    <option value="defi">DeFi</option>
+                    <option value="nft">NFT</option>
+                    <option value="gaming">Gaming</option>
+                    <option value="layer1">Layer 1</option>
+                    <option value="layer2">Layer 2</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <span class="filter-label">Urutkan:</span>
+                <select class="filter-select" id="sortFilter" onchange="sortMarket()">
+                    <option value="rank">Ranking</option>
+                    <option value="price">Harga</option>
+                    <option value="change">Perubahan 24h</option>
+                    <option value="volume">Volume 24h</option>
+                    <option value="marketcap">Market Cap</option>
+                </select>
+            </div>
+            <div class="search-filter">
+                <input type="text" id="searchInput" placeholder="🔍 Cari cryptocurrency..." onkeyup="searchMarket()">
+            </div>
+        </div>
+
+        <div class="market-table-container">
+            <table class="market-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Coin</th>
+                        <th>Harga</th>
+                        <th>24h</th>
+                        <th>7d</th>
+                        <th>Market Cap</th>
+                        <th>Volume 24h</th>
+                        <th>Chart 7d</th>
+                    </tr>
+                </thead>
+                <tbody id="marketTableBody">
+                </tbody>
+            </table>
+
+            <div class="pagination">
+                <button class="page-btn" onclick="previousPage()" id="prevBtn">← Sebelumnya</button>
+                <span class="page-info">Halaman <span id="currentPage">1</span> dari <span id="totalPages">10</span></span>
+                <button class="page-btn" onclick="nextPage()" id="nextBtn">Selanjutnya →</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const cryptoData = [
+            { rank: 1, name: 'Bitcoin', symbol: 'BTC', price: 51234.56, change24h: 5.23, change7d: 12.45, marketCap: '1.2T', volume: '45.2B', icon: '₿' },
+            { rank: 2, name: 'Ethereum', symbol: 'ETH', price: 3456.78, change24h: 3.45, change7d: 8.91, marketCap: '415B', volume: '23.1B', icon: 'Ξ' },
+            { rank: 3, name: 'Binance Coin', symbol: 'BNB', price: 456.89, change24h: -1.23, change7d: 4.56, marketCap: '72.3B', volume: '2.8B', icon: 'B' },
+            { rank: 4, name: 'Cardano', symbol: 'ADA', price: 1.23, change24h: 8.91, change7d: 15.67, marketCap: '43.2B', volume: '1.9B', icon: 'A' },
+            { rank: 5, name: 'Solana', symbol: 'SOL', price: 123.45, change24h: -2.34, change7d: -5.12, marketCap: '51.7B', volume: '3.4B', icon: 'S' },
+            { rank: 6, name: 'Polkadot', symbol: 'DOT', price: 23.45, change24h: 4.56, change7d: 9.34, marketCap: '28.9B', volume: '1.2B', icon: 'D' },
+            { rank: 7, name: 'Ripple', symbol: 'XRP', price: 0.87, change24h: 2.34, change7d: 6.78, marketCap: '45.6B', volume: '4.5B', icon: 'X' },
+            { rank: 8, name: 'Dogecoin', symbol: 'DOGE', price: 0.15, change24h: -3.45, change7d: -1.23, marketCap: '21.3B', volume: '2.1B', icon: 'Ð' },
+            { rank: 9, name: 'Polygon', symbol: 'MATIC', price: 1.45, change24h: 6.78, change7d: 11.23, marketCap: '13.4B', volume: '890M', icon: 'M' },
+            { rank: 10, name: 'Avalanche', symbol: 'AVAX', price: 34.56, change24h: -1.89, change7d: 3.45, marketCap: '12.8B', volume: '678M', icon: 'A' },
+            { rank: 11, name: 'Chainlink', symbol: 'LINK', price: 12.34, change24h: 4.23, change7d: 7.89, marketCap: '7.2B', volume: '567M', icon: 'L' },
+            { rank: 12, name: 'Uniswap', symbol: 'UNI', price: 8.91, change24h: -2.12, change7d: 5.67, marketCap: '6.8B', volume: '456M', icon: 'U' },
+            { rank: 13, name: 'Litecoin', symbol: 'LTC', price: 89.12, change24h: 3.45, change7d: 6.23, marketCap: '6.5B', volume: '890M', icon: 'Ł' },
+            { rank: 14, name: 'Cosmos', symbol: 'ATOM', price: 11.23, change24h: 5.67, change7d: 9.12, marketCap: '4.3B', volume: '234M', icon: 'C' },
+            { rank: 15, name: 'Algorand', symbol: 'ALGO', price: 0.45, change24h: -4.23, change7d: -2.34, marketCap: '3.9B', volume: '189M', icon: 'A' },
+        ];
+
+        let currentPage = 1;
+        const itemsPerPage = 10;
+        let filteredData = [...cryptoData];
+
+        function drawSparkline(canvas, data) {
+            const ctx = canvas.getContext('2d');
+            const width = canvas.width;
+            const height = canvas.height;
+
+            ctx.clearRect(0, 0, width, height);
+
+            const max = Math.max(...data);
+            const min = Math.min(...data);
+            const range = max - min;
+
+            ctx.strokeStyle = data[data.length - 1] > data[0] ? '#28a745' : '#dc3545';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+
+            data.forEach((value, index) => {
+                const x = (width / (data.length - 1)) * index;
+                const y = height - ((value - min) / range) * height;
+
+                if (index === 0) {
+                    ctx.moveTo(x, y);
+                } else {
+                    ctx.lineTo(x, y);
+                }
+            });
+
+            ctx.stroke();
+        }
+
+        function generateSparklineData() {
+            const data = [];
+            let value = 100;
+            for (let i = 0; i < 20; i++) {
+                value += (Math.random() - 0.5) * 10;
+                data.push(value);
+            }
+            return data;
+        }
+
+        function renderMarketTable() {
+            const tbody = document.getElementById('marketTableBody');
+            tbody.innerHTML = '';
+
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            const pageData = filteredData.slice(startIndex, endIndex);
+
+            pageData.forEach(crypto => {
+                const row = document.createElement('tr');
+                
+                const change24Class = crypto.change24h >= 0 ? 'positive' : 'negative';
+                const change24Sign = crypto.change24h >= 0 ? '+' : '';
+                const change7Class = crypto.change7d >= 0 ? 'positive' : 'negative';
+                const change7Sign = crypto.change7d >= 0 ? '+' : '';
+
+                row.innerHTML = `
+                    <td class="rank-cell">${crypto.rank}</td>
+                    <td>
+                        <div class="coin-cell">
+                            <div class="coin-icon">${crypto.icon}</div>
+                            <div class="coin-info">
+                                <span class="coin-name">${crypto.name}</span>
+                                <span class="coin-symbol">${crypto.symbol}</span>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="price-cell">$${crypto.price.toLocaleString('en-US')}</td>
+                    <td><span class="change-cell ${change24Class}">${change24Sign}${crypto.change24h}%</span></td>
+                    <td><span class="change-cell ${change7Class}">${change7Sign}${crypto.change7d}%</span></td>
+                    <td>$${crypto.marketCap}</td>
+                    <td>$${crypto.volume}</td>
+                    <td><canvas class="sparkline" width="100" height="40"></canvas></td>
+                `;
+
+                tbody.appendChild(row);
+
+                const canvas = row.querySelector('.sparkline');
+                drawSparkline(canvas, generateSparklineData());
+            });
+
+            updatePagination();
+        }
+
+        function updatePagination() {
+            const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+            document.getElementById('currentPage').textContent = currentPage;
+            document.getElementById('totalPages').textContent = totalPages;
+
+            document.getElementById('prevBtn').disabled = currentPage === 1;
+            document.getElementById('nextBtn').disabled = currentPage === totalPages;
+        }
+
+        function nextPage() {
+            const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+            if (currentPage < totalPages) {
+                currentPage++;
+                renderMarketTable();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        function previousPage() {
+            if (currentPage > 1) {
+                currentPage--;
+                renderMarketTable();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        function searchMarket() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            filteredData = cryptoData.filter(crypto => 
+                crypto.name.toLowerCase().includes(query) || 
+                crypto.symbol.toLowerCase().includes(query)
+            );
+            currentPage = 1;
+            renderMarketTable();
+        }
+
+        function sortMarket() {
+            const sortBy = document.getElementById('sortFilter').value;
+            
+            filteredData.sort((a, b) => {
+                switch(sortBy) {
+                    case 'price':
+                        return b.price - a.price;
+                    case 'change':
+                        return b.change24h - a.change24h;
+                    case 'volume':
+                        return parseFloat(b.volume.replace(/[^\d.]/g, '')) - parseFloat(a.volume.replace(/[^\d.]/g, ''));
+                    case 'marketcap':
+                        return parseFloat(b.marketCap.replace(/[^\d.]/g, '')) - parseFloat(a.marketCap.replace(/[^\d.]/g, ''));
+                    default:
+                        return a.rank - b.rank;
+                }
+            });
+            
+            currentPage = 1;
+            renderMarketTable();
+        }
+
+        function filterMarket() {
+            const category = document.getElementById('categoryFilter').value;
+            
+            if (category === 'all') {
+                filteredData = [...cryptoData];
+            } else {
+                filteredData = cryptoData.filter(crypto => {
+                    // Simulasi kategori
+                    if (category === 'defi' && ['UNI', 'LINK', 'AVAX'].includes(crypto.symbol)) return true;
+                    if (category === 'layer1' && ['BTC', 'ETH', 'SOL', 'ADA'].includes(crypto.symbol)) return true;
+                    if (category === 'layer2' && ['MATIC', 'ATOM'].includes(crypto.symbol)) return true;
+                    return false;
+                });
+            }
+            
+            currentPage = 1;
+            renderMarketTable();
+        }
+
+        // Update prices
+        function updatePrices() {
+            cryptoData.forEach(crypto => {
+                crypto.price += (Math.random() - 0.5) * crypto.price * 0.01;
+                crypto.change24h = parseFloat(((Math.random() - 0.5) * 10).toFixed(2));
+            });
+            if (document.getElementById('marketTableBody').children.length > 0) {
+                renderMarketTable();
+            }
+        }
+
+        renderMarketTable();
+        setInterval(updatePrices, 5000);
+    </script>
+</body>
+</html>

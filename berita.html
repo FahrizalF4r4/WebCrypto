@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Berita Crypto - CryptoAnalytics</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            cursor: pointer;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: #667eea;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .page-header {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .page-subtitle {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        .trending-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            color: #333;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .trending-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .trending-card {
+            position: relative;
+            border-radius: 15px;
+            overflow: hidden;
+            height: 250px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .trending-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .trending-image {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+        }
+
+        .trending-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+            padding: 2rem 1.5rem 1.5rem;
+            color: white;
+        }
+
+        .trending-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            line-height: 1.4;
+        }
+
+        .trending-meta {
+            font-size: 0.85rem;
+            opacity: 0.9;
+        }
+
+        .filters-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .filter-tabs {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-tab {
+            padding: 0.6rem 1.5rem;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            color: #333;
+        }
+
+        .filter-tab:hover {
+            border-color: #667eea;
+            color: #667eea;
+        }
+
+        .filter-tab.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: transparent;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 0.6rem 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .search-box input:focus {
+            border-color: #667eea;
+        }
+
+        .news-grid {
+            display: grid;
+            gap: 2rem;
+        }
+
+        .news-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 1.5rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+
+        .news-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .news-image {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+        }
+
+        .news-content {
+            padding: 1.5rem 1.5rem 1.5rem 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .news-category {
+            display: inline-block;
+            padding: 0.4rem 1rem;
+            background: #667eea;
+            color: white;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            width: fit-content;
+        }
+
+        .news-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.8rem;
+            line-height: 1.4;
+        }
+
+        .news-description {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+            flex: 1;
+        }
+
+        .news-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 1rem;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .news-source {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .source-icon {
+            width: 24px;
+            height: 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+
+        .news-time {
+            color: #999;
+            font-size: 0.9rem;
+        }
+
+        .sentiment-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .sentiment-badge.bullish {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .sentiment-badge.bearish {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .sentiment-badge.neutral {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .load-more {
+            text-align: center;
+            margin-top: 2rem;
+        }
+
+        .load-more-btn {
+            padding: 1rem 3rem;
+            background: rgba(255, 255, 255, 0.95);
+            color: #667eea;
+            border: 2px solid #667eea;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .load-more-btn:hover {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: transparent;
+        }
+
+        .sidebar {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar-section {
+            margin-bottom: 2rem;
+        }
+
+        .sidebar-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .sidebar-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 1rem;
+        }
+
+        .trending-topic {
+            padding: 0.8rem;
+            background: #f8f9fa;
+            border-radius: 10px;
+            margin-bottom: 0.8rem;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .trending-topic:hover {
+            background: #e9ecef;
+        }
+
+        .topic-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.3rem;
+        }
+
+        .topic-count {
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        .two-column-layout {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 2rem;
+        }
+
+        @media (max-width: 1024px) {
+            .two-column-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .news-card {
+                grid-template-columns: 200px 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 1rem;
+            }
+
+            .page-title {
+                font-size: 1.8rem;
+            }
+
+            .news-card {
+                grid-template-columns: 1fr;
+            }
+
+            .news-image {
+                height: 200px;
+            }
+
+            .news-content {
+                padding: 1.5rem;
+            }
+
+            .trending-card {
+                height: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav">
+            <div class="logo" onclick="window.location.href='index.html'">CryptoAnalytics</div>
+            <ul class="nav-links">
+                <li><a href="index.html">Beranda</a></li>
+                <li><a href="pasar.html">Pasar</a></li>
+                <li><a href="portofolio.html">Portofolio</a></li>
+                <li><a href="pasar.html" class="active">Berita</a></li>
+                <li><a href="Login.html">Login</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="container">
+        <div class="page-header">
+            <h1 class="page-title">📰 Berita Cryptocurrency</h1>
+            <p class="page-subtitle">Update terbaru dari dunia cryptocurrency dan blockchain</p>
+        </div>
+
+        <div class="trending-section">
+            <h2 class="section-title">🔥 Trending Hari Ini</h2>
+            <div class="trending-grid">
+                <div class="trending-card">
+                    <div class="trending-image">₿</div>
+                    <div class="trending-overlay">
+                        <div class="trending-title">Bitcoin Tembus $50,000, Analis Prediksi Rally Lanjutan</div>
+                        <div class="trending-meta">CoinDesk • 1 jam yang lalu</div>
+                    </div>
+                </div>
+                <div class="trending-card">
+                    <div class="trending-image">Ξ</div>
+                    <div class="trending-overlay">
+                        <div class="trending-title">Ethereum Dencun Upgrade Berhasil Diluncurkan</div>
+                        <div class="trending-meta">CoinTelegraph • 2 jam yang lalu</div>
+                    </div>
+                </div>
+                <div class="trending-card">
+                    <div class="trending-image">🏦</div>
+                    <div class="trending-overlay">
+                        <div class="trending-title">Bank Sentral Indonesia Rilis Panduan Crypto 2025</div>
+                        <div class="trending-meta">Bloomberg • 3 jam yang lalu</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="filters-section">
+            <div class="filter-tabs">
+                <button class="filter-tab active" onclick="filterNews('all')">Semua</button>
+                <button class="filter-tab" onclick="filterNews('bitcoin')">Bitcoin</button>
+                <button class="filter-tab" onclick="filterNews('ethereum')">Ethereum</button>
+                <button class="filter-tab" onclick="filterNews('altcoin')">Altcoin</button>
+                <button class="filter-tab" onclick="filterNews('defi')">DeFi</button>
+                <button class="filter-tab" onclick="filterNews('nft')">NFT</button>
+                <button class="filter-tab" onclick="filterNews('regulation')">Regulasi</button>
+            </div>
+            <div class="search-box">
+                <input type="text" placeholder="🔍 Cari berita..." onkeyup="searchNews()">
+            </div>
+        </div>
+
+        <div class="two-column-layout">
+            <div>
+                <div class="news-grid" id="newsGrid"></div>
+                <div class="load-more">
+                    <button class="load-more-btn" onclick="loadMore()">Muat Lebih Banyak</button>
+                </div>
+            </div>
+
+            <div class="sidebar">
+                <div class="sidebar-section">
+                    <h3 class="sidebar-title">🔥 Trending Topics</h3>
+                    <div class="trending-topic">
+                        <div class="topic-title">#Bitcoin50K</div>
+                        <div class="topic-count">2,847 artikel</div>
+                    </div>
+                    <div class="trending-topic">
+                        <div class="topic-title">#EthereumUpgrade</div>
+                        <div class="topic-count">1,523 artikel</div>
+                    </div>
+                    <div class="trending-topic">
+                        <div class="topic-title">#DeFiSummer</div>
+                        <div class="topic-count">892 artikel</div>
+                    </div>
+                    <div class="trending-topic">
+                        <div class="topic-title">#CryptoRegulation</div>
+                        <div class="topic-count">756 artikel</div>
+                    </div>
+                    <div class="trending-topic">
+                        <div class="topic-title">#NFTMarket</div>
+                        <div class="topic-count">634 artikel</div>
+                    </div>
+                </div>
+
+                <div class="sidebar-section">
+                    <h3 class="sidebar-title">📊 Market Sentiment</h3>
+                    <div style="text-align: center; padding: 1rem;">
+                        <div style="font-size: 3rem; margin-bottom: 0.5rem;">😊</div>
+                        <div style="font-size: 1.5rem; font-weight: 600; color: #28a745; margin-bottom: 0.5rem;">Bullish</div>
+                        <div style="color: #666;">75% berita positif hari ini</div>
+                    </div>
+                </div>
+
+                <div class="sidebar-section">
+                    <h3 class="sidebar-title">📅 Event Mendatang</h3>
+                    <div class="trending-topic">
+                        <div class="topic-title">Bitcoin Halving 2024</div>
+                        <div class="topic-count">Dalam 45 hari</div>
+                    </div>
+                    <div class="trending-topic">
+                        <div class="topic-title">Consensus 2025</div>
+                        <div class="topic-count">15-17 Mei 2025</div>
+                    </div>
+                    <div class="trending-topic">
+                        <div class="topic-title">ETH ETF Decision</div>
+                        <div class="topic-count">30 November 2025</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const newsData = [
+            {
+                category: 'Bitcoin',
+                title: 'Bitcoin Menembus $50,000 di Tengah Optimisme Pasar Global',
+                description: 'Harga Bitcoin berhasil melampaui level psikologis $50,000 untuk pertama kalinya sejak bulan lalu. Analis memperkirakan momentum bullish akan terus berlanjut seiring meningkatnya adopsi institusional.',
+                source: 'CoinDesk',
+                time: '2 jam yang lalu',
+                icon: '₿',
+                sentiment: 'bullish',
+                categoryTag: 'bitcoin'
+            },
+            {
+                category: 'Ethereum',
+                title: 'Ethereum Siapkan Update Dencun untuk Peningkatan Skalabilitas',
+                description: 'Network Ethereum akan menjalani upgrade signifikan yang diharapkan dapat mengurangi biaya gas hingga 90%. Developer menyatakan upgrade akan diluncurkan dalam dua minggu ke depan.',
+                source: 'CoinTelegraph',
+                time: '3 jam yang lalu',
+                icon: 'Ξ',
+                sentiment: 'bullish',
+                categoryTag: 'ethereum'
+            },
+            {
+                category: 'Regulasi',
+                title: 'Regulasi Crypto di Indonesia Semakin Jelas, Ini Kata Bappebti',
+                description: 'Badan Pengawas Perdagangan Berjangka Komoditi (Bappebti) merilis panduan lengkap regulasi cryptocurrency di Indonesia. Langkah ini diharapkan memberikan kepastian hukum bagi investor lokal.',
+                source: 'Blockchain Indonesia',
+                time: '5 jam yang lalu',
+                icon: '🏦',
+                sentiment: 'neutral',
+                categoryTag: 'regulation'
+            },
+            {
+                category: 'Altcoin',
+                title: 'Solana dan Cardano Kompak Cetak Rekor Transaksi Tertinggi',
+                description: 'Jaringan Solana mencatat 65 juta transaksi dalam 24 jam, sementara Cardano mengalami peningkatan aktivitas DeFi hingga 200%. Keduanya menunjukkan pertumbuhan ekosistem yang solid.',
+                source: 'CryptoNews',
+                time: '6 jam yang lalu',
+                icon: 'S',
+                sentiment: 'bullish',
+                categoryTag: 'altcoin'
+            },
+            {
+                category: 'DeFi',
+                title: 'Total Value Locked (TVL) DeFi Sentuh $100 Miliar',
+                description: 'Sektor DeFi mengalami pertumbuhan luar biasa dengan TVL mencapai $100 miliar. Uniswap, Aave, dan MakerDAO menjadi protokol dengan kontribusi terbesar.',
+                source: 'DeFi Pulse',
+                time: '8 jam yang lalu',
+                icon: '🔷',
+                sentiment: 'bullish',
+                categoryTag: 'defi'
+            },
+            {
+                category: 'NFT',
+                title: 'Pasar NFT Mulai Pulih, Volume Perdagangan Naik 45%',
+                description: 'Setelah mengalami penurunan selama beberapa bulan, pasar NFT menunjukkan tanda-tanda pemulihan. Koleksi blue-chip seperti Bored Ape dan CryptoPunks kembali populer.',
+                source: 'NFT Evening',
+                time: '10 jam yang lalu',
+                icon: '🎨',
+                sentiment: 'bullish',
+                categoryTag: 'nft'
+            },
+            {
+                category: 'Bitcoin',
+                title: 'MicroStrategy Beli Bitcoin Lagi Senilai $500 Juta',
+                description: 'Perusahaan yang dipimpin Michael Saylor ini kembali menambah kepemilikan Bitcoin mereka. Total holding MicroStrategy kini mencapai 200,000 BTC.',
+                source: 'Bloomberg',
+                time: '12 jam yang lalu',
+                icon: '₿',
+                sentiment: 'bullish',
+                categoryTag: 'bitcoin'
+            },
+            {
+                category: 'Ethereum',
+                title: 'Staking Ethereum Capai All-Time High, 30 Juta ETH Terkunci',
+                description: 'Jumlah ETH yang di-stake mencapai rekor tertinggi sepanjang masa. Ini menunjukkan kepercayaan tinggi validator terhadap masa depan Ethereum.',
+                source: 'Ethereum Foundation',
+                time: '14 jam yang lalu',
+                icon: 'Ξ',
+                sentiment: 'bullish',
+                categoryTag: 'ethereum'
+            },
+            {
+                category: 'Regulasi',
+                title: 'SEC Amerika Serikat Tunda Keputusan ETF Ethereum',
+                description: 'Securities and Exchange Commission (SEC) AS kembali menunda keputusan approval ETF Ethereum spot. Keputusan final diperkirakan akan diumumkan akhir tahun ini.',
+                source: 'Reuters',
+                time: '16 jam yang lalu',
+                icon: '🏛️',
+                sentiment: 'bearish',
+                categoryTag: 'regulation'
+            },
+            {
+                category: 'Altcoin',
+                title: 'Polygon Luncurkan zkEVM untuk Solusi Layer 2 Lebih Efisien',
+                description: 'Polygon resmi meluncurkan zkEVM yang diklaim dapat meningkatkan throughput hingga 1000x. Teknologi zero-knowledge proof menjadi kunci utama inovasi ini.',
+                source: 'Polygon Blog',
+                time: '18 jam yang lalu',
+                icon: 'M',
+                sentiment: 'bullish',
+                categoryTag: 'altcoin'
+            }
+        ];
+
+        let displayedNews = 6;
+        let currentFilter = 'all';
+
+        function renderNews() {
+            const grid = document.getElementById('newsGrid');
+            grid.innerHTML = '';
+
+            let filteredNews = newsData;
+            if (currentFilter !== 'all') {
+                filteredNews = newsData.filter(news => news.categoryTag === currentFilter);
+            }
+
+            const newsToShow = filteredNews.slice(0, displayedNews);
+
+            newsToShow.forEach(news => {
+                const card = document.createElement('div');
+                card.className = 'news-card';
+                
+                card.innerHTML = `
+                    <div class="news-image">${news.icon}</div>
+                    <div class="news-content">
+                        <span class="news-category">${news.category}</span>
+                        <h3 class="news-title">${news.title}</h3>
+                        <p class="news-description">${news.description}</p>
+                        <div class="news-footer">
+                            <div class="news-source">
+                                <div class="source-icon">${news.source.charAt(0)}</div>
+                                <span>${news.source}</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 1rem;">
+                                <span class="sentiment-badge ${news.sentiment}">
+                                    ${news.sentiment === 'bullish' ? '📈' : news.sentiment === 'bearish' ? '📉' : '➡️'}
+                                    ${news.sentiment.charAt(0).toUpperCase() + news.sentiment.slice(1)}
+                                </span>
+                                <span class="news-time">${news.time}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                grid.appendChild(card);
+            });
+        }
+
+        function filterNews(category) {
+            currentFilter = category;
+            displayedNews = 6;
+            
+            const tabs = document.querySelectorAll('.filter-tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            renderNews();
+        }
+
+        function searchNews() {
+            const searchTerm = event.target.value.toLowerCase();
+            const grid = document.getElementById('newsGrid');
+            
+            if (searchTerm === '') {
+                renderNews();
+                return;
+            }
+
+            const filteredNews = newsData.filter(news => 
+                news.title.toLowerCase().includes(searchTerm) ||
+                news.description.toLowerCase().includes(searchTerm) ||
+                news.category.toLowerCase().includes(searchTerm)
+            );
+
+            grid.innerHTML = '';
+
+            filteredNews.forEach(news => {
+                const card = document.createElement('div');
+                card.className = 'news-card';
+                
+                card.innerHTML = `
+                    <div class="news-image">${news.icon}</div>
+                    <div class="news-content">
+                        <span class="news-category">${news.category}</span>
+                        <h3 class="news-title">${news.title}</h3>
+                        <p class="news-description">${news.description}</p>
+                        <div class="news-footer">
+                            <div class="news-source">
+                                <div class="source-icon">${news.source.charAt(0)}</div>
+                                <span>${news.source}</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 1rem;">
+                                <span class="sentiment-badge ${news.sentiment}">
+                                    ${news.sentiment === 'bullish' ? '📈' : news.sentiment === 'bearish' ? '📉' : '➡️'}
+                                    ${news.sentiment.charAt(0).toUpperCase() + news.sentiment.slice(1)}
+                                </span>
+                                <span class="news-time">${news.time}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                grid.appendChild(card);
+            });
+        }
+
+        function loadMore() {
+            displayedNews += 6;
+            renderNews();
+        }
+
+        renderNews();
+    </script>
+</body>
+</html>
