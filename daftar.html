@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daftar - CryptoAnalytics</title>
+    <link rel="stylesheet" href="css/daftar.css">
+</head>
+<body>
+    <div class="register-container">
+        <div class="register-left">
+            <div class="logo">CryptoAnalytics</div>
+            <h2>Mulai Trading Lebih Cerdas Hari Ini</h2>
+            <p>Dapatkan akses penuh ke platform analisis cryptocurrency terbaik</p>
+            <ul class="benefit-list">
+                <li>Gratis selamanya untuk fitur dasar</li>
+                <li>Akses data crypto</li>
+                <li>Portfolio tracker dengan notifikasi</li>
+                <li>Analisis teknikal profesional</li>
+                <li>Komunitas trader aktif</li>
+                <li>Dukungan 24/7</li>
+            </ul>
+        </div>
+
+        <div class="register-right">
+            <h3>Buat Akun Baru</h3>
+
+            <form id="registerForm">
+                <div class="form-group">
+                    <label for="fullname">Nama Lengkap</label>
+                    <div class="input-wrapper">
+                        <input type="text" id="fullname" placeholder="Masukkan nama lengkap" required>
+                    </div>
+                    <div class="error-message" id="nameError"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <div class="input-wrapper">
+                        <input type="email" id="email" placeholder="nama@email.com" required>
+                    </div>
+                    <div class="error-message" id="emailError"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <div class="input-wrapper">
+                        <input type="password" id="password" placeholder="Minimal 8 karakter" required>
+                        
+                    </div>
+                    <div class="password-strength">
+                        <div class="strength-bar">
+                            <div class="strength-fill" id="strengthFill"></div>
+                        </div>
+                        <span id="strengthText" style="color: #666; font-size: 0.85rem;"></span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="confirmPassword">Konfirmasi Password</label>
+                    <div class="input-wrapper">
+                        <input type="password" id="confirmPassword" placeholder="Ulangi password" required>
+                        
+                    </div>
+                    <div class="error-message" id="confirmError"></div>
+                </div>
+
+                <div class="terms-checkbox">
+                    <input type="checkbox" id="terms" required>
+                    <label for="terms">
+                        Saya setuju dengan <a href="#">Syarat & Ketentuan</a> dan <a href="#">Kebijakan Privasi</a>
+                    </label>
+                </div>
+
+                <button type="submit" class="register-btn">Daftar Sekarang</button>
+            </form>
+
+            <div class="divider">
+                <span>Atau daftar dengan</span>
+            </div>
+
+            <div class="social-register">
+                <button class="social-btn" onclick="socialRegister('Google')">
+                    <span>🔍</span> Google
+                </button>
+                <button class="social-btn" onclick="socialRegister('Facebook')">
+                    <span>📘</span> Facebook
+                </button>
+            </div>
+
+            <div class="login-link">
+                Sudah punya akun? <a href="login.html">Masuk di sini</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let passwordVisibility = {
+            password: false,
+            confirmPassword: false
+        };
+
+        function togglePassword(fieldId) {
+            const passwordInput = document.getElementById(fieldId);
+            const toggleBtn = passwordInput.nextElementSibling;
+            
+            passwordVisibility[fieldId] = !passwordVisibility[fieldId];
+            passwordInput.type = passwordVisibility[fieldId] ? 'text' : 'password';
+            toggleBtn.textContent = passwordVisibility[fieldId] ? '🙈' : '👁️';
+        }
+
+        // Password strength checker
+        document.getElementById('password').addEventListener('input', function() {
+            const password = this.value;
+            const strengthFill = document.getElementById('strengthFill');
+            const strengthText = document.getElementById('strengthText');
+            
+            let strength = 0;
+            
+            if (password.length >= 8) strength++;
+            if (password.match(/[a-z]/) && password.match(/[A-Z]/)) strength++;
+            if (password.match(/[0-9]/)) strength++;
+            if (password.match(/[^a-zA-Z0-9]/)) strength++;
+            
+            strengthFill.className = 'strength-fill';
+            
+            if (strength <= 1) {
+                strengthFill.classList.add('strength-weak');
+                strengthText.textContent = 'Lemah';
+                strengthText.style.color = '#ff4444';
+            } else if (strength <= 3) {
+                strengthFill.classList.add('strength-medium');
+                strengthText.textContent = 'Sedang';
+                strengthText.style.color = '#ffbb33';
+            } else {
+                strengthFill.classList.add('strength-strong');
+                strengthText.textContent = 'Kuat';
+                strengthText.style.color = '#00C851';
+            }
+        });
+
+        // Form validation
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const fullname = document.getElementById('fullname').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const terms = document.getElementById('terms').checked;
+            
+            let isValid = true;
+            
+            // Reset error messages
+            document.querySelectorAll('.error-message').forEach(el => {
+                el.style.display = 'none';
+            });
+            
+            // Validate name
+            if (fullname.length < 3) {
+                document.getElementById('nameError').textContent = 'Nama minimal 3 karakter';
+                document.getElementById('nameError').style.display = 'block';
+                isValid = false;
+            }
+            
+            // Validate email
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                document.getElementById('emailError').textContent = 'Format email tidak valid';
+                document.getElementById('emailError').style.display = 'block';
+                isValid = false;
+            }
+            
+            // Validate password
+            if (password.length < 8) {
+                alert('Password minimal 8 karakter');
+                isValid = false;
+            }
+            
+            // Validate password match
+            if (password !== confirmPassword) {
+                document.getElementById('confirmError').textContent = 'Password tidak cocok';
+                document.getElementById('confirmError').style.display = 'block';
+                isValid = false;
+            }
+            
+            // Validate terms
+            if (!terms) {
+                alert('Anda harus menyetujui Syarat & Ketentuan');
+                isValid = false;
+            }
+            
+            if (isValid) {
+                alert(`Pendaftaran berhasil!\n\nNama: ${fullname}\nEmail: ${email}\n\nSelamat datang di CryptoAnalytics!`);
+                window.location.href = 'index.html';
+            }
+        });
+
+        function socialRegister(platform) {
+            alert(`Daftar dengan ${platform}\n\nFitur ini akan terhubung dengan OAuth ${platform} untuk pendaftaran yang aman dan cepat.`);
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>

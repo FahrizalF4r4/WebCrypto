@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portofolio - CryptoAnalytics</title>
+    <link rel="stylesheet" href="css/portofolio.css">
+</head>
+<body>
+    <header class="header">
+        <nav class="nav">
+            <div class="logo" onclick="window.location.href='index.html'">CryptoAnalytics</div>
+            <ul class="nav-links">
+                <li><a href="beranda.html">Beranda</a></li>
+                <li><a href="pasar.html">Pasar</a></li>
+                <li><a href="portofolio.html">Portofolio</a></li>
+                <li><a href="berita.html">Berita</a></li>
+              
+                
+                <!-- Profile Dropdown -->
+                <li class="profile-section">
+                    <div class="profile-trigger" id="profileTrigger">
+                        <div class="profile-avatar" id="profileAvatar"></div>
+                        <span class="profile-name" id="profileName">Loading...</span>
+                        <span class="profile-arrow">▼</span>
+                    </div>
+
+                    <div class="profile-dropdown" id="profileDropdown">
+                        <div class="user-info">
+                            <div class="user-avatar-large" id="userAvatarLarge"></div>
+                            <div class="user-name" id="userName">Loading...</div>
+                            <div class="user-email" id="userEmail">Loading...</div>
+                            <span class="user-status">Premium Member</span>
+                        </div>
+
+                        <a href="homepage.html" class="menu-item" ">
+                                <span class="menu-icon">X</span>
+                                <span class="menu-text">Logout</span>
+                                <span class="menu-arrow">›</span>
+                            </a>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="container">
+        <div class="page-header">
+            <div class="page-title-section">
+                <h1>💼 Portofolio Saya</h1>
+                <p class="page-subtitle">Kelola dan pantau investasi cryptocurrency Anda</p>
+            </div>
+            <button class="add-btn" onclick="openModal()">+ Tambah Aset</button>
+        </div>
+
+        <div class="portfolio-summary">
+            <div class="summary-card">
+                <div class="summary-label">Total Nilai Portofolio</div>
+                <div class="summary-value" id="totalValue">$45,678.90</div>
+                <div class="summary-change positive" id="totalChange">
+                    <span>↑</span>
+                    <span>+$3,456.78 (8.19%)</span>
+                </div>
+            </div>
+            <div class="summary-card">
+                <div class="summary-label">Total Investasi</div>
+                <div class="summary-value" id="totalInvested">$42,222.12</div>
+                <div class="summary-change" style="color: #666;">Modal awal</div>
+            </div>
+            <div class="summary-card">
+                <div class="summary-label">Profit/Loss 24h</div>
+                <div class="summary-value positive" id="profit24h">+$1,234.56</div>
+                <div class="summary-change positive">
+                    <span>↑</span>
+                    <span>+2.78%</span>
+                </div>
+            </div>
+            <div class="summary-card">
+                <div class="summary-label">Jumlah Aset</div>
+                <div class="summary-value" id="totalAssets">6</div>
+                <div class="summary-change" style="color: #666;">Cryptocurrency berbeda</div>
+            </div>
+        </div>
+
+        <div class="chart-container">
+            <div class="chart-header">
+                <h3 class="chart-title">Grafik Performa Portofolio</h3>
+                <div class="time-filters">
+                    <button class="time-btn" onclick="changeTimeframe('24H')">24H</button>
+                    <button class="time-btn active" onclick="changeTimeframe('1W')">1W</button>
+                    <button class="time-btn" onclick="changeTimeframe('1M')">1M</button>
+                    <button class="time-btn" onclick="changeTimeframe('1Y')">1Y</button>
+                </div>
+            </div>
+            <canvas id="portfolioChart"></canvas>
+        </div>
+
+        <div class="holdings-section">
+            <div class="holdings-header">
+                <h3 class="holdings-title">Aset yang Dimiliki</h3>
+            </div>
+            <div class="holdings-grid" id="holdingsGrid"></div>
+        </div>
+
+        <div class="allocation-section">
+            <h3 class="allocation-title">Alokasi Aset</h3>
+            <div class="allocation-chart">
+                <canvas id="allocationChart"></canvas>
+            </div>
+            <div class="allocation-list" id="allocationList"></div>
+        </div>
+    </div>
+
+    <div class="modal" id="addAssetModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Tambah Aset Baru</h2>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
+            <form onsubmit="addAsset(event)">
+                <div class="form-group">
+                    <label class="form-label">Pilih Cryptocurrency</label>
+                    <select class="form-select" id="coinSelect" required>
+                        <option value="">-- Pilih Coin --</option>
+                        <option value="BTC">Bitcoin (BTC)</option>
+                        <option value="ETH">Ethereum (ETH)</option>
+                        <option value="BNB">Binance Coin (BNB)</option>
+                        <option value="ADA">Cardano (ADA)</option>
+                        <option value="SOL">Solana (SOL)</option>
+                        <option value="DOT">Polkadot (DOT)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Jumlah</label>
+                    <input type="number" class="form-input" id="amountInput" step="0.00000001" placeholder="0.00" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Harga Beli (USD)</label>
+                    <input type="number" class="form-input" id="buyPriceInput" step="0.01" placeholder="0.00" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Tanggal Pembelian</label>
+                    <input type="date" class="form-input" id="dateInput" required>
+                </div>
+                <button type="submit" class="submit-btn">Tambah ke Portofolio</button>
+            </form>
+        </div>
+    </div>
+
+
+    <footer class="footer">
+        <p>&copy; 2025 CryptoAnalytics. Dashboard analisis cryptocurrency. Dibuat Oleh @Fahrizal</p>
+    </footer>
+    
+         <script>
+        const holdings = [
+            { symbol: 'BTC', name: 'Bitcoin', icon: '₿', amount: 0.5, buyPrice: 45000, currentPrice: 51234.56, change: 5.23 },
+            { symbol: 'ETH', name: 'Ethereum', icon: 'Ξ', amount: 5, buyPrice: 2800, currentPrice: 3456.78, change: 3.45 },
+            { symbol: 'BNB', name: 'Binance Coin', icon: 'B', amount: 20, buyPrice: 380, currentPrice: 456.89, change: -1.23 },
+            { symbol: 'ADA', name: 'Cardano', icon: 'A', amount: 5000, buyPrice: 0.85, currentPrice: 1.23, change: 8.91 },
+            { symbol: 'SOL', name: 'Solana', icon: 'S', amount: 25, buyPrice: 98, currentPrice: 123.45, change: -2.34 },
+            { symbol: 'DOT', name: 'Polkadot', icon: 'D', amount: 150, buyPrice: 18, currentPrice: 23.45, change: 4.56 }
+        ];
+
+        const colors = ['#667eea', '#764ba2', '#f093fb', '#4facfe', '#43e97b', '#fa709a'];
+
+        function renderHoldings() {
+            const grid = document.getElementById('holdingsGrid');
+            grid.innerHTML = '';
+
+            holdings.forEach(holding => {
+                const totalValue = holding.amount * holding.currentPrice;
+                const totalInvested = holding.amount * holding.buyPrice;
+                const profitLoss = totalValue - totalInvested;
+                const profitLossPercent = ((profitLoss / totalInvested) * 100).toFixed(2);
+
+                const changeClass = holding.change >= 0 ? 'positive' : 'negative';
+                const changeSign = holding.change >= 0 ? '+' : '';
+                const plClass = profitLoss >= 0 ? 'positive' : 'negative';
+                const plSign = profitLoss >= 0 ? '+' : '';
+
+                const card = document.createElement('div');
+                card.className = 'holding-card';
+                card.innerHTML = `
+                    <div class="coin-icon">${holding.icon}</div>
+                    <div class="holding-info">
+                        <div class="holding-name">${holding.name}</div>
+                        <div class="holding-amount">${holding.amount} ${holding.symbol}</div>
+                    </div>
+                    <div class="holding-price">
+                        <div class="current-price">$${holding.currentPrice.toLocaleString('en-US')}</div>
+                        <span class="price-change ${changeClass}">${changeSign}${holding.change}%</span>
+                    </div>
+                    <div class="holding-value">
+                        <div class="total-value">$${totalValue.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</div>
+                        <div class="profit-loss ${plClass}">${plSign}$${Math.abs(profitLoss).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})} (${plSign}${profitLossPercent}%)</div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function drawPortfolioChart() {
+            const canvas = document.getElementById('portfolioChart');
+            const ctx = canvas.getContext('2d');
+            canvas.width = canvas.parentElement.offsetWidth;
+            canvas.height = 300;
+
+            const width = canvas.width;
+            const height = canvas.height;
+            const points = 50;
+            const portfolioData = [];
+            let value = 40000;
+
+            for (let i = 0; i < points; i++) {
+                value += (Math.random() - 0.3) * 1000;
+                portfolioData.push(value);
+            }
+
+            const maxValue = Math.max(...portfolioData);
+            const minValue = Math.min(...portfolioData);
+            const range = maxValue - minValue;
+
+            ctx.clearRect(0, 0, width, height);
+
+            // Grid
+            ctx.strokeStyle = '#e0e0e0';
+            ctx.lineWidth = 1;
+            for (let i = 0; i <= 5; i++) {
+                const y = (height / 5) * i;
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(width, y);
+                ctx.stroke();
+            }
+
+            // Line
+            ctx.strokeStyle = '#667eea';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+
+            portfolioData.forEach((value, index) => {
+                const x = (width / (points - 1)) * index;
+                const y = height - ((value - minValue) / range) * height;
+
+                if (index === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            });
+
+            ctx.stroke();
+
+            // Gradient fill
+            const gradient = ctx.createLinearGradient(0, 0, 0, height);
+            gradient.addColorStop(0, 'rgba(102, 126, 234, 0.3)');
+            gradient.addColorStop(1, 'rgba(102, 126, 234, 0)');
+
+            ctx.fillStyle = gradient;
+            ctx.lineTo(width, height);
+            ctx.lineTo(0, height);
+            ctx.closePath();
+            ctx.fill();
+        }
+
+        function drawAllocationChart() {
+            const canvas = document.getElementById('allocationChart');
+            const ctx = canvas.getContext('2d');
+            const size = 400;
+            canvas.width = size;
+            canvas.height = size;
+
+            const centerX = size / 2;
+            const centerY = size / 2;
+            const radius = size / 2 - 20;
+
+            let totalValue = holdings.reduce((sum, h) => sum + h.amount * h.currentPrice, 0);
+            let currentAngle = -Math.PI / 2;
+
+            holdings.forEach((holding, index) => {
+                const value = holding.amount * holding.currentPrice;
+                const percentage = value / totalValue;
+                const sliceAngle = percentage * 2 * Math.PI;
+
+                ctx.fillStyle = colors[index];
+                ctx.beginPath();
+                ctx.moveTo(centerX, centerY);
+                ctx.arc(centerX, centerY, radius, currentAngle, currentAngle + sliceAngle);
+                ctx.closePath();
+                ctx.fill();
+                ctx.strokeStyle = 'white';
+                ctx.lineWidth = 3;
+                ctx.stroke();
+
+                currentAngle += sliceAngle;
+            });
+
+            // Center hole
+            ctx.fillStyle = 'white';
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radius * 0.6, 0, 2 * Math.PI);
+            ctx.fill();
+        }
+
+        function renderAllocationList() {
+            const list = document.getElementById('allocationList');
+            list.innerHTML = '';
+
+            const totalValue = holdings.reduce((sum, h) => sum + h.amount * h.currentPrice, 0);
+
+            holdings.forEach((holding, index) => {
+                const value = holding.amount * holding.currentPrice;
+                const percentage = ((value / totalValue) * 100).toFixed(2);
+                const item = document.createElement('div');
+                item.className = 'allocation-item';
+                item.innerHTML = `
+                    <div class="allocation-color" style="background: ${colors[index]}"></div>
+                    <div class="allocation-details">
+                        <div class="allocation-name">${holding.name}</div>
+                        <div class="allocation-percentage">${percentage}% dari portofolio</div>
+                    </div>
+                    <div class="allocation-amount">$${value.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</div>
+                `;
+                list.appendChild(item);
+            });
+        }
+
+        function changeTimeframe(event, timeframe) {
+            const buttons = document.querySelectorAll('.time-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            drawPortfolioChart();
+        }
+
+        function openModal() {
+            document.getElementById('addAssetModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('addAssetModal').classList.remove('active');
+        }
+
+        function addAsset(event) {
+            event.preventDefault();
+            const coin = document.getElementById('coinSelect').value;
+            const amount = parseFloat(document.getElementById('amountInput').value);
+            const buyPrice = parseFloat(document.getElementById('buyPriceInput').value);
+            const date = document.getElementById('dateInput').value;
+
+            alert(`Berhasil menambahkan:\n${amount} ${coin}\nHarga Beli: $${buyPrice}\nTanggal: ${date}`);
+            closeModal();
+            event.target.reset();
+        }
+
+        function updatePortfolio() {
+            holdings.forEach(holding => {
+                holding.currentPrice += (Math.random() - 0.5) * holding.currentPrice * 0.01;
+                holding.change = parseFloat(((Math.random() - 0.5) * 10).toFixed(2));
+            });
+            renderHoldings();
+        }
+
+        // Inisialisasi
+        renderHoldings();
+        drawPortfolioChart();
+        drawAllocationChart();
+        renderAllocationList();
+        setInterval(updatePortfolio, 5000);
+
+        window.addEventListener('resize', () => {
+            drawPortfolioChart();
+            drawAllocationChart();
+        });
+
+        // ✅ Fix bagian yang sebelumnya terpotong
+        window.addEventListener('click', (e) => {
+            const modal = document.getElementById('addAssetModal');
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+    </script>
+    <script src="script.js"></script>
+</body>
+</html>

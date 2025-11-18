@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CryptoAnalytics - Dashboard Analisis Kripto</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- HEADER -->
+    <header class="header">
+        <nav class="nav">
+            <div class="logo">CryptoAnalytics</div>
+            <ul class="nav-links">
+                <li><a href="#home">Beranda</a></li>
+                <li><a href="pasar.html">Pasar</a></li>
+                <li><a href="portofolio.html">Portofolio</a></li>
+                <li><a href="berita.html">Berita</a></li>
+               
+                
+                <!-- Profile Dropdown -->
+                <li class="profile-section">
+                    <div class="profile-trigger" id="profileTrigger">
+                        <div class="profile-avatar" id="profileAvatar"></div>
+                        <span class="profile-name" id="profileName">Loading...</span>
+                        <span class="profile-arrow">▼</span>
+                    </div>
+
+                    <div class="profile-dropdown" id="profileDropdown">
+                        <div class="user-info">
+                            <div class="user-avatar-large" id="userAvatarLarge"></div>
+                            <div class="user-name" id="userName">Loading...</div>
+                            <div class="user-email" id="userEmail">Loading...</div>
+                            <span class="user-status">Premium Member</span>
+                        </div>
+
+                         <a href="homepage.html" class="menu-item" ">
+                                <span class="menu-icon">X</span>
+                                <span class="menu-text">Logout</span>
+                                <span class="menu-arrow">›</span>
+                            </a>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- MAIN CONTAINER -->
+    <div class="container">
+        <!-- HERO SECTION -->
+        <div class="hero">
+            <h1>Dashboard Analisis Cryptocurrency Real-Time</h1>
+            <p style="color: #666; font-size: 1.1rem; margin-bottom: 1rem;">
+                Pantau harga, analisis teknikal, dan sentimen pasar untuk keputusan investasi yang lebih cerdas
+            </p>
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="Cari token, proyek, atau analisis...">
+                <button onclick="searchToken()">Cari</button>
+            </div>
+        </div>
+
+        <!-- CRYPTO CARDS -->
+        <h2 class="section-title">Top Cryptocurrency</h2>
+        <div class="top-crypto" id="cryptoList">
+            <div class="loading">Memuat data cryptocurrency...</div>
+        </div>
+
+        <!-- CHART SECTION -->
+        <div class="chart-section">
+            <div class="chart-header">
+                <h3 class="chart-title">Grafik Harga Bitcoin</h3>
+                <div class="time-filters">
+                    <button class="time-btn active" onclick="changeTimeframe('1D')">1D</button>
+                    <button class="time-btn" onclick="changeTimeframe('1W')">1W</button>
+                    <button class="time-btn" onclick="changeTimeframe('1M')">1M</button>
+                    <button class="time-btn" onclick="changeTimeframe('1Y')">1Y</button>
+                </div>
+            </div>
+            <div class="chart-canvas">
+                <canvas id="priceChart"></canvas>
+            </div>
+        </div>
+
+        <!-- FEATURES -->
+        <h2 class="section-title">Fitur Analisis</h2>
+        <div class="features">
+            <div class="feature-card">
+                <div class="feature-icon">📈</div>
+                <h3 class="feature-title">Analisis Teknikal</h3>
+                <p class="feature-desc">RSI, MACD, Bollinger Bands dan indikator lainnya untuk analisis mendalam</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">⛓️</div>
+                <h3 class="feature-title">Data On-Chain</h3>
+                <p class="feature-desc">Pantau transaksi blockchain, wallet aktif, dan hash rate secara real-time</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">💭</div>
+                <h3 class="feature-title">Sentimen Pasar</h3>
+                <p class="feature-desc">Analisis sentimen dari media sosial dan berita untuk prediksi tren</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">💼</div>
+                <h3 class="feature-title">Portofolio Tracker</h3>
+                <p class="feature-desc">Kelola dan pantau portofolio kripto Anda dengan simulasi profit/loss</p>
+            </div>
+        </div>
+
+        <!-- NEWS SECTION -->
+        <div class="news-section">
+            <h3 style="margin-bottom: 1.5rem; font-size: 1.5rem;">Berita Terkini</h3>
+            <div id="newsList">
+                <div class="news-item">
+                    <div class="news-title">Bitcoin Menembus $50,000 di Tengah Optimisme Pasar</div>
+                    <div class="news-meta">CoinDesk • 2 jam yang lalu</div>
+                </div>
+                <div class="news-item">
+                    <div class="news-title">Ethereum Siapkan Update Shanghai untuk Penarikan Staking</div>
+                    <div class="news-meta">CoinTelegraph • 5 jam yang lalu</div>
+                </div>
+                <div class="news-item">
+                    <div class="news-title">Regulasi Crypto di Indonesia Semakin Jelas</div>
+                    <div class="news-meta">Blockchain Indonesia • 8 jam yang lalu</div>
+                </div>
+                <div class="news-item">
+                    <div class="news-title">Altcoin Season: 5 Token yang Patut Dipantau</div>
+                    <div class="news-meta">CryptoNews • 12 jam yang lalu</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <p>&copy; 2025 CryptoAnalytics. Dashboard analisis cryptocurrency. Dibuat Oleh @Fahrizal</p>
+    </footer>
+
+    <!-- JAVASCRIPT -->
+    <script>
+        // ========== DATA MANAGEMENT ==========
+        const CryptoData = {
+            cryptoList: [
+                { name: 'Bitcoin', symbol: 'BTC', price: 51234.56, change: 5.23, marketCap: '1.2T', volume: '45.2B', icon: '₿', high24h: 52000, low24h: 49500 },
+                { name: 'Ethereum', symbol: 'ETH', price: 3456.78, change: 3.45, marketCap: '415B', volume: '23.1B', icon: 'Ξ', high24h: 3500, low24h: 3300 },
+                { name: 'Binance Coin', symbol: 'BNB', price: 456.89, change: -1.23, marketCap: '72.3B', volume: '2.8B', icon: 'B', high24h: 465, low24h: 450 },
+                { name: 'Cardano', symbol: 'ADA', price: 1.23, change: 8.91, marketCap: '43.2B', volume: '1.9B', icon: 'A', high24h: 1.25, low24h: 1.10 },
+                { name: 'Solana', symbol: 'SOL', price: 123.45, change: -2.34, marketCap: '51.7B', volume: '3.4B', icon: 'S', high24h: 128, low24h: 120 },
+                { name: 'Polkadot', symbol: 'DOT', price: 23.45, change: 4.56, marketCap: '28.9B', volume: '1.2B', icon: 'D', high24h: 24, low24h: 22.5 }
+            ],
+
+            userData: {
+                name: "User",
+                email: "User@gmail.com",
+                avatar: null,
+                status: "Premium Member"
+            },
+
+            priceHistory: {
+                '1D': [],
+                '1W': [],
+                '1M': [],
+                '1Y': []
+            },
+
+            currentTimeframe: '1D'
+        };
+
+        // ========== UI RENDERING ==========
+        const UI = {
+            renderCryptoCards() {
+                const cryptoList = document.getElementById('cryptoList');
+                cryptoList.innerHTML = '';
+
+                CryptoData.cryptoList.forEach(crypto => {
+                    const changeClass = crypto.change >= 0 ? 'positive' : 'negative';
+                    const changeSign = crypto.change >= 0 ? '+' : '';
+
+                    const card = document.createElement('div');
+                    card.className = 'crypto-card';
+                    card.innerHTML = `
+                        <div class="crypto-header">
+                            <div class="crypto-name">
+                                <div class="crypto-icon">${crypto.icon}</div>
+                                <div>
+                                    <div style="font-weight: bold; font-size: 1.1rem;">${crypto.name}</div>
+                                    <div style="color: #666; font-size: 0.9rem;">${crypto.symbol}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="crypto-price">${this.formatPrice(crypto.price)}</div>
+                        <span class="crypto-change ${changeClass}">${changeSign}${crypto.change}%</span>
+                        <div class="crypto-stats">
+                            <div class="stat-item">
+                                <div class="stat-label">Market Cap</div>
+                                <div class="stat-value">${crypto.marketCap}</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-label">Volume 24h</div>
+                                <div class="stat-value">${crypto.volume}</div>
+                            </div>
+                        </div>
+                    `;
+                    
+                    // Add click event for detail view
+                    card.addEventListener('click', () => {
+                        this.showCryptoDetail(crypto);
+                    });
+                    
+                    cryptoList.appendChild(card);
+                });
+            },
+
+            formatPrice(price) {
+                if (price >= 1000) {
+                    return price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                }
+                return price.toFixed(2);
+            },
+
+            showCryptoDetail(crypto) {
+                alert(`
+🪙 ${crypto.name} (${crypto.symbol})
+
+💰 Harga: ${this.formatPrice(crypto.price)}
+📈 Perubahan 24h: ${crypto.change >= 0 ? '+' : ''}${crypto.change}%
+📊 Market Cap: ${crypto.marketCap}
+💵 Volume 24h: ${crypto.volume}
+⬆️ High 24h: ${this.formatPrice(crypto.high24h)}
+⬇️ Low 24h: ${this.formatPrice(crypto.low24h)}
+
+Klik OK untuk kembali ke dashboard.
+                `);
+            },
+
+            showNotification(message, type = 'info') {
+                // Simple notification system
+                const notification = document.createElement('div');
+                notification.style.cssText = `
+                    position: fixed;
+                    top: 80px;
+                    right: 20px;
+                    padding: 1rem 1.5rem;
+                    background: ${type === 'success' ? '#d4edda' : type === 'error' ? '#f8d7da' : '#d1ecf1'};
+                    color: ${type === 'success' ? '#155724' : type === 'error' ? '#721c24' : '#0c5460'};
+                    border-radius: 10px;
+                    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+                    z-index: 9999;
+                    animation: slideIn 0.3s ease-out;
+                `;
+                notification.textContent = message;
+                document.body.appendChild(notification);
+
+                setTimeout(() => {
+                    notification.style.animation = 'slideOut 0.3s ease-out';
+                    setTimeout(() => notification.remove(), 300);
+                }, 3000);
+            }
+        };
+
+        // ========== CHART ==========
+        const Chart = {
+            draw() {
+                const canvas = document.getElementById('priceChart');
+                if (!canvas) return;
+
+                const ctx = canvas.getContext('2d');
+                canvas.width = canvas.parentElement.offsetWidth;
+                canvas.height = 350;
+
+                const width = canvas.width;
+                const height = canvas.height;
+
+                // Generate price data
+                const points = 50;
+                const priceData = [];
+                let price = 50000;
+
+                for (let i = 0; i < points; i++) {
+                    price += (Math.random() - 0.5) * 2000;
+                    priceData.push(price);
+                }
+
+                const maxPrice = Math.max(...priceData);
+                const minPrice = Math.min(...priceData);
+                const priceRange = maxPrice - minPrice;
+
+                // Clear canvas
+                ctx.clearRect(0, 0, width, height);
+
+                // Draw grid
+                ctx.strokeStyle = '#e0e0e0';
+                ctx.lineWidth = 1;
+                for (let i = 0; i < 5; i++) {
+                    const y = (height / 5) * i;
+                    ctx.beginPath();
+                    ctx.moveTo(0, y);
+                    ctx.lineTo(width, y);
+                    ctx.stroke();
+                }
+
+                // Draw price line
+                ctx.strokeStyle = '#667eea';
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+
+                priceData.forEach((price, index) => {
+                    const x = (width / (points - 1)) * index;
+                    const y = height - ((price - minPrice) / priceRange) * height;
+
+                    if (index === 0) {
+                        ctx.moveTo(x, y);
+                    } else {
+                        ctx.lineTo(x, y);
+                    }
+                });
+
+                ctx.stroke();
+
+                // Draw gradient fill
+                const gradient = ctx.createLinearGradient(0, 0, 0, height);
+                gradient.addColorStop(0, 'rgba(102, 126, 234, 0.3)');
+                gradient.addColorStop(1, 'rgba(102, 126, 234, 0)');
+
+                ctx.fillStyle = gradient;
+                ctx.lineTo(width, height);
+                ctx.lineTo(0, height);
+                ctx.closePath();
+                ctx.fill();
+            }
+        };
+
+        // ========== PROFILE MANAGEMENT ==========
+        const Profile = {
+            initialize() {
+                const { name, email, avatar } = CryptoData.userData;
+                const initial = name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+
+                document.getElementById('profileName').textContent = name.split(' ')[0];
+                
+                const avatarContent = avatar ? `<img src="${avatar}" alt="${name}">` : initial;
+                document.getElementById('profileAvatar').innerHTML = avatarContent;
+                document.getElementById('userAvatarLarge').innerHTML = avatarContent;
+                
+                document.getElementById('userName').textContent = name;
+                document.getElementById('userEmail').textContent = email;
+            },
+
+            setupDropdown() {
+                const trigger = document.getElementById('profileTrigger');
+                const dropdown = document.getElementById('profileDropdown');
+
+                trigger.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    dropdown.classList.toggle('active');
+                    trigger.classList.toggle('active');
+                });
+
+                document.addEventListener('click', (e) => {
+                    if (!trigger.contains(e.target) && !dropdown.contains(e.target)) {
+                        dropdown.classList.remove('active');
+                        trigger.classList.remove('active');
+                    }
+                });
+            },
+
+            close() {
+                const trigger = document.getElementById('profileTrigger');
+                const dropdown = document.getElementById('profileDropdown');
+                dropdown.classList.remove('active');
+                trigger.classList.remove('active');
+            }
+        };
+
+        // ========== DATA UPDATES ==========
+        const DataUpdate = {
+            updatePrices() {
+                CryptoData.cryptoList.forEach(crypto => {
+                    const randomChange = (Math.random() - 0.5) * 100;
+                    crypto.price += randomChange;
+                    crypto.change = parseFloat(((Math.random() - 0.5) * 10).toFixed(2));
+                });
+                UI.renderCryptoCards();
+            },
+
+            startAutoUpdate() {
+                setInterval(() => {
+                    this.updatePrices();
+                }, 5000);
+            }
+        };
+
+        // ========== USER INTERACTIONS ==========
+        function changeTimeframe(timeframe) {
+            const buttons = document.querySelectorAll('.time-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            Chart.draw();
+        }
+
+        function searchToken() {
+            const searchInput = document.getElementById('searchInput').value;
+            if (searchInput) {
+                alert(`Mencari: ${searchInput}\n\nFitur pencarian akan terhubung dengan API CoinGecko untuk hasil real-time.`);
+            }
+        }
+
+        function navigateTo(page) {
+            Profile.close();
+            alert(`Navigasi ke halaman: ${page}\n\nFitur ini akan mengarahkan ke halaman ${page}.`);
+            // window.location.href = `${page}.html`;
+        }
+
+        function handleLogout() {
+            const confirmLogout = confirm('Apakah Anda yakin ingin keluar?');
+            if (confirmLogout) {
+                alert('Anda telah keluar dari akun.\n\nAnda akan diarahkan ke halaman login.');
+                // localStorage.removeItem('userSession');
+                // window.location.href = 'login.html';
+            }
+            Profile.close();
+        }
+
+        // ========== INITIALIZATION ==========
+        const App = {
+            init() {
+                // Initialize profile
+                Profile.initialize();
+                Profile.setupDropdown();
+
+                // Render crypto cards
+                UI.renderCryptoCards();
+
+                // Draw chart
+                Chart.draw();
+
+                // Start auto-update
+                DataUpdate.startAutoUpdate();
+
+                // Handle window resize for chart
+                window.addEventListener('resize', () => {
+                    Chart.draw();
+                });
+            }
+        };
+
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            App.init();
+        });
+
+        // ========== OPTIONAL: LOCAL STORAGE ==========
+        // Uncomment these functions to enable localStorage integration
+
+        
+        function loadUserFromStorage() {
+            const storedUser = localStorage.getItem('currentUser');
+            if (storedUser) {
+                const user = JSON.parse(storedUser);
+                Object.assign(CryptoData.userData, user);
+                Profile.initialize();
+            }
+        }
+
+        function saveUserAfterLogin(name, email, avatar = null) {
+            const user = { name, email, avatar, status: "Premium Member" };
+            localStorage.setItem('currentUser', JSON.stringify(user));
+            Object.assign(CryptoData.userData, user);
+            Profile.initialize();
+        }
+
+        // Call this to load user from storage
+        loadUserFromStorage();
+    
+
+</script>
+
+</body>
+</html>

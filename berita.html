@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Berita Crypto - CryptoAnalytics</title>
+    <link rel="stylesheet" href="css/berita.css">
+</head>
+<body>
+    <header class="header">
+        <nav class="nav">
+            <div class="logo">CryptoAnalytics</div>
+            <ul class="nav-links">
+                <li><a href="beranda.html">Beranda</a></li>
+                <li><a href="#pasar" class="active">Pasar</a></li>
+                <li><a href="portofolio.html">Portofolio</a></li>
+                <li><a href="berita.html">Berita</a></li>
+               
+
+                <li class="profile-section">
+                    <div class="profile-trigger" id="profileTrigger">
+                        <div class="profile-avatar" id="profileAvatar"></div>
+                        <span class="profile-name" id="profileName">Loading...</span>
+                        <span class="profile-arrow">▼</span>
+                    </div>
+
+                    <div class="profile-dropdown" id="profileDropdown">
+                        <div class="user-info">
+                            <div class="user-avatar-large" id="userAvatarLarge"></div>
+                            <div class="user-name" id="userName">Loading...</div>
+                            <div class="user-email" id="userEmail">Loading...</div>
+                            <span class="user-status">Premium Member</span>
+                        </div>
+
+                        <a href="homepage.html" class="menu-item" ">
+                                <span class="menu-icon">X</span>
+                                <span class="menu-text">Logout</span>
+                                <span class="menu-arrow">›</span>
+                            </a>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="container">
+        <div class="page-header">
+            <h1>Berita Cryptocurrency Terkini</h1>
+            <p>Update terbaru dari dunia kripto, blockchain, dan teknologi web3</p>
+        </div>
+
+        <div class="featured-news">
+            <div class="featured-content">
+                <div class="featured-image">₿</div>
+                <div class="featured-text">
+                    <span class="featured-badge">FEATURED</span>
+                    <h2>Bitcoin Menembus $52,000 di Tengah Optimisme Institusional</h2>
+                    <p>Bitcoin mencapai level tertinggi dalam 3 bulan terakhir seiring meningkatnya minat dari investor institusional. Para analis memperkirakan tren bullish akan berlanjut hingga akhir tahun dengan dukungan dari ETF Bitcoin yang semakin populer.</p>
+                    
+                    <button class="read-more-btn" onclick="readArticle('featured')">Baca Selengkapnya</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="news-filters">
+            <span class="filter-label">Filter:</span>
+            <button class="filter-btn active" onclick="filterNews('all')">Semua</button>
+            <button class="filter-btn" onclick="filterNews('bitcoin')">Bitcoin</button>
+            <button class="filter-btn" onclick="filterNews('ethereum')">Ethereum</button>
+            <button class="filter-btn" onclick="filterNews('defi')">DeFi</button>
+            <button class="filter-btn" onclick="filterNews('nft')">NFT</button>
+            <button class="filter-btn" onclick="filterNews('regulasi')">Regulasi</button>
+            <button class="filter-btn" onclick="filterNews('teknologi')">Teknologi</button>
+        </div>
+
+        <div class="news-grid" id="newsGrid">
+            <!-- News cards will be generated here -->
+        </div>
+
+        <div class="trending-section">
+            <h3>🔥 Trending Hari Ini</h3>
+            <div id="trendingList">
+                <!-- Trending items will be generated here -->
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>&copy; 2025 CryptoAnalytics. Dashboard analisis cryptocurrency. Dibuat Oleh @Fahrizal</p>
+    </footer>
+
+    <script>
+        const newsData = [
+            {
+                category: 'ethereum',
+                title: 'Ethereum Siapkan Update Shanghai untuk Penarikan Staking',
+                excerpt: 'Ethereum Foundation mengumumkan jadwal peluncuran update Shanghai yang akan memungkinkan validator untuk menarik ETH yang di-stake.',
+                source: 'CoinTelegraph',
+                time: '1 jam yang lalu',
+                icon: 'Ξ'
+            },
+            {
+                category: 'regulasi',
+                title: 'Regulasi Crypto di Indonesia Semakin Jelas',
+                excerpt: 'Bappebti mengeluarkan peraturan baru terkait perdagangan aset kripto yang memberikan kepastian hukum bagi pelaku industri.',
+                source: 'Blockchain Indonesia',
+                time: '2 jam yang lalu',
+                icon: '⚖️'
+            },
+            {
+                category: 'defi',
+                title: 'Total Value Locked DeFi Mencapai $100 Miliar',
+                excerpt: 'Ekosistem DeFi terus berkembang dengan TVL mencapai milestone baru, didorong oleh inovasi protokol dan yield farming.',
+                source: 'DeFi Pulse',
+                time: '3 jam yang lalu',
+                icon: '🏦'
+            },
+            {
+                category: 'bitcoin',
+                title: 'El Salvador Tambah 200 BTC ke Cadangan Nasional',
+                excerpt: 'Presiden Nayib Bukele mengumumkan pembelian Bitcoin tambahan sebagai bagian dari strategi investasi negara.',
+                source: 'Bitcoin Magazine',
+                time: '4 jam yang lalu',
+                icon: '🇸🇻'
+            },
+            {
+                category: 'nft',
+                title: 'Pasar NFT Mengalami Rebound 45% Bulan Ini',
+                excerpt: 'Volume perdagangan NFT menunjukkan pertumbuhan signifikan seiring dengan munculnya koleksi-koleksi baru yang inovatif.',
+                source: 'NFT Now',
+                time: '5 jam yang lalu',
+                icon: '🎨'
+            },
+            {
+                category: 'teknologi',
+                title: 'Layer 2 Solutions Mengurangi Gas Fee Ethereum 90%',
+                excerpt: 'Solusi skalabilitas seperti Arbitrum dan Optimism berhasil menurunkan biaya transaksi secara drastis.',
+                source: 'The Block',
+                time: '6 jam yang lalu',
+                icon: '⚡'
+            },
+            {
+                category: 'defi',
+                title: 'Protokol Lending Baru Tawarkan Yield 15% APY',
+                excerpt: 'Platform DeFi terbaru menarik perhatian dengan menawarkan imbal hasil tinggi untuk stablecoin.',
+                source: 'Decrypt',
+                time: '7 jam yang lalu',
+                icon: '💰'
+            },
+            {
+                category: 'ethereum',
+                title: 'Vitalik Buterin Bahas Roadmap Ethereum 2024',
+                excerpt: 'Co-founder Ethereum memaparkan visi pengembangan jaringan termasuk sharding dan proto-danksharding.',
+                source: 'Ethereum.org',
+                time: '8 jam yang lalu',
+                icon: '🛣️'
+            },
+            {
+                category: 'bitcoin',
+                title: 'Mining Bitcoin Semakin Ramah Lingkungan',
+                excerpt: 'Studi menunjukkan 59% energy mining Bitcoin berasal dari sumber terbarukan, naik dari 36% tahun lalu.',
+                source: 'Bitcoin Mining Council',
+                time: '10 jam yang lalu',
+                icon: '♻️'
+            }
+        ];
+
+        const trendingData = [
+            { title: 'Bitcoin ETF Spot Catat Arus Masuk $500 Juta', source: 'Bloomberg', time: '30 menit' },
+            { title: 'Binance Luncurkan Program Edukasi Blockchain', source: 'Binance News', time: '1 jam' },
+            { title: 'Analisis: Altcoin Season Bisa Dimulai Bulan Depan', source: 'CryptoQuant', time: '2 jam' },
+            { title: 'Metaverse Token Naik 200% dalam Seminggu', source: 'CoinMarketCap', time: '3 jam' },
+            { title: 'Smart Contract Audit Temukan 0 Bug di Protokol Baru', source: 'CertiK', time: '4 jam' }
+        ];
+
+        function renderNews(filter = 'all') {
+            const newsGrid = document.getElementById('newsGrid');
+            newsGrid.innerHTML = '';
+
+            const filteredNews = filter === 'all' 
+                ? newsData 
+                : newsData.filter(news => news.category === filter);
+
+            filteredNews.forEach(news => {
+                const card = document.createElement('div');
+                card.className = 'news-card';
+                card.onclick = () => readArticle(news.title);
+                card.innerHTML = `
+                    <div class="news-image">${news.icon}</div>
+                    <div class="news-content">
+                        <span class="news-category">${news.category.toUpperCase()}</span>
+                        <div class="news-title">${news.title}</div>
+                        <div class="news-excerpt">${news.excerpt}</div>
+                        <div class="news-meta">
+                            <span class="news-source">${news.source}</span>
+                            <span>${news.time}</span>
+                        </div>
+                    </div>
+                `;
+                newsGrid.appendChild(card);
+            });
+        }
+
+        function renderTrending() {
+            const trendingList = document.getElementById('trendingList');
+            trendingList.innerHTML = '';
+
+            trendingData.forEach((item, index) => {
+                const trendingItem = document.createElement('div');
+                trendingItem.className = 'trending-item';
+                trendingItem.onclick = () => readArticle(item.title);
+                trendingItem.innerHTML = `
+                    <div class="trending-number">${index + 1}</div>
+                    <div class="trending-content">
+                        <div class="trending-title">${item.title}</div>
+                        <div class="trending-meta">${item.source} • ${item.time} yang lalu</div>
+                    </div>
+                `;
+                trendingList.appendChild(trendingItem);
+            });
+        }
+
+        function filterNews(category) {
+            const buttons = document.querySelectorAll('.filter-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            renderNews(category);
+        }
+
+        function readArticle(title) {
+            alert(`Membuka artikel: "${title}"\n\nFitur ini akan menampilkan artikel lengkap dengan konten real-time dari API berita crypto.`);
+        }
+
+        // Initialize
+        renderNews();
+        renderTrending();
+
+        // Simulate real-time updates
+        setInterval(() => {
+            const randomIndex = Math.floor(Math.random() * newsData.length);
+            newsData[randomIndex].time = 'Baru saja';
+            renderNews();
+        }, 30000);
+    </script>
+
+    <script src="script.js"></script>
+</body>
+</html>

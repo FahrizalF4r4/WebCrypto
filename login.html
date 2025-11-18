@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - CryptoAnalytics</title>
+    <link rel="stylesheet" href="css/login.css">
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-left">
+            <div class="logo">CryptoAnalytics</div>
+            <h2>Analisis Cryptocurrency</h2>
+            <p>Bergabunglah dengan ribuan trader yang menggunakan platform kami untuk keputusan investasi yang lebih cerdas</p>
+            <ul class="feature-list">
+                <li>Data cryptocurrency</li>
+                <li>Analisis teknikal profesional</li>
+                <li>Portfolio tracker otomatis</li>
+                <li>Berita dan sentimen pasar terkini</li>
+            </ul>
+        </div>
+
+        <div class="login-right">
+            <h3>Selamat Datang Kembali!</h3>
+            <p class="subtitle">Silakan masuk ke akun Anda</p>
+
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <div class="input-wrapper">
+                        <input type="email" id="email" placeholder="Nama@email.com" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <div class="input-wrapper">
+                        <input type="password" id="password" placeholder="Masukkan password" required>
+                        
+                    </div>
+                </div>
+
+                <div class="remember-forgot">
+                    <label class="remember-me">
+                        <input type="checkbox" id="remember">
+                        <span>Ingat saya</span>
+                    </label>
+                   
+                </div>
+
+                <button type="submit" class="login-btn">Masuk</button>
+            </form>
+
+            <div class="divider">
+                <span>Atau masuk dengan</span>
+            </div>
+
+            <div class="social-login">
+                <button class="social-btn" onclick="socialLogin('Google')">
+                    <span>🔍</span> Google
+                </button>
+                <button class="social-btn" onclick="socialLogin('Facebook')">
+                    <span>📘</span> Facebook
+                </button>
+            </div>
+
+            <div class="signup-link">
+                Belum punya akun? <a href="daftar.html">Daftar sekarang</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let passwordVisible = false;
+
+        function togglePassword() {
+            const passwordInput = document.getElementById('password');
+            const toggleBtn = document.querySelector('.password-toggle');
+            
+            passwordVisible = !passwordVisible;
+            passwordInput.type = passwordVisible ? 'text' : 'password';
+            toggleBtn.textContent = passwordVisible ? '🙈' : '👁️';
+        }
+
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const remember = document.getElementById('remember').checked;
+
+            // Simulasi login
+            if (email && password) {
+                alert(`Login berhasil!\n\nEmail: ${email}\nIngat saya: ${remember ? 'Ya' : 'Tidak'}\n\nAnda akan diarahkan ke dashboard...`);
+                // Redirect ke halaman index.html
+                window.location.href = 'beranda.html';
+            }
+        });
+
+        function socialLogin(platform) {
+            alert(`Login dengan ${platform}\n\nFitur ini akan terhubung dengan OAuth ${platform} untuk autentikasi yang aman.`);
+            // Redirect ke halaman index.html setelah social login
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>

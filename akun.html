@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CryptoAnalytics - Dashboard with Profile</title>
+    <link rel="stylesheet" href="css/akun.css">
+</head>
+<body>
+    <div class="dropdown-overlay" id="dropdownOverlay"></div>
+
+    <header class="header">
+        <nav class="nav">
+            <div class="logo">CryptoAnalytics</div>
+            <ul class="nav-links">
+                <li><a href="#home">Beranda</a></li>
+                <li><a href="#pasar">Pasar</a></li>
+                <li><a href="#portofolio">Portofolio</a></li>
+                <li><a href="#berita">Berita</a></li>
+                
+                <!-- Profile Section -->
+                <li class="profile-section">
+                    <div class="profile-trigger" id="profileTrigger">
+                        <div class="profile-avatar" id="profileAvatar">
+                            <!-- Avatar will be loaded here -->
+                        </div>
+                        <span class="profile-name" id="profileName">Loading...</span>
+                        <span class="profile-arrow">▼</span>
+                    </div>
+
+                    <!-- Dropdown Panel -->
+                    <div class="profile-dropdown" id="profileDropdown">
+                        <!-- User Info -->
+                        <div class="user-info">
+                            <div class="user-avatar-large" id="userAvatarLarge">
+                                <!-- Large avatar will be loaded here -->
+                            </div>
+                            <div class="user-name" id="userName">Loading...</div>
+                            <div class="user-email" id="userEmail">Loading...</div>
+                            <span class="user-status">Premium Member</span>
+                        </div>
+
+                        <!-- Menu Actions -->
+                        <div class="profile-menu">
+                            <a href="#" class="menu-item" onclick="navigateTo('profile'); return false;">
+                                <span class="menu-icon">👤</span>
+                                <span class="menu-text">Lihat Profil</span>
+                                <span class="menu-arrow">›</span>
+                            </a>
+                            <a href="#" class="menu-item" onclick="navigateTo('dashboard'); return false;">
+                                <span class="menu-icon">📊</span>
+                                <span class="menu-text">Dashboard</span>
+                                <span class="menu-arrow">›</span>
+                            </a>
+                            <a href="#" class="menu-item" onclick="navigateTo('portfolio'); return false;">
+                                <span class="menu-icon">💼</span>
+                                <span class="menu-text">Portofolio Saya</span>
+                                <span class="menu-arrow">›</span>
+                            </a>
+                            
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="container">
+        <div class="welcome-card">
+            <h1>Selamat Datang, <span id="welcomeName">User</span>! 👋</h1>
+            <p>Berikut adalah ringkasan aktivitas cryptocurrency Anda hari ini</p>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>Total Portofolio</h3>
+                <div class="value">$12,450</div>
+            </div>
+            <div class="stat-card">
+                <h3>Profit Hari Ini</h3>
+                <div class="value">+$325</div>
+            </div>
+            <div class="stat-card">
+                <h3>Total Aset</h3>
+                <div class="value">8 Coins</div>
+            </div>
+            <div class="stat-card">
+                <h3>ROI</h3>
+                <div class="value">+24.5%</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Simulasi data user (dari login)
+        const userData = {
+            name: "Fahrizal Ahmad",
+            email: "fahrizal@cryptoanalytics.com",
+            avatar: null, // Set null untuk menggunakan initial
+            status: "Premium Member",
+            role: "Trader"
+        };
+
+        // Initialize profile
+        function initializeProfile() {
+            const name = userData.name;
+            const email = userData.email;
+            const initial = name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+
+            // Set profile name in navbar
+            document.getElementById('profileName').textContent = name.split(' ')[0];
+            
+            // Set avatars (both small and large)
+            const avatarContent = userData.avatar 
+                ? `<img src="${userData.avatar}" alt="${name}">`
+                : initial;
+            
+            document.getElementById('profileAvatar').innerHTML = avatarContent;
+            document.getElementById('userAvatarLarge').innerHTML = avatarContent;
+            
+            // Set user info in dropdown
+            document.getElementById('userName').textContent = name;
+            document.getElementById('userEmail').textContent = email;
+            
+            // Set welcome name
+            document.getElementById('welcomeName').textContent = name.split(' ')[0];
+        }
+
+        // Toggle dropdown
+        const profileTrigger = document.getElementById('profileTrigger');
+        const profileDropdown = document.getElementById('profileDropdown');
+        const dropdownOverlay = document.getElementById('dropdownOverlay');
+
+        profileTrigger.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const isActive = profileDropdown.classList.contains('active');
+            
+            if (isActive) {
+                closeDropdown();
+            } else {
+                openDropdown();
+            }
+        });
+
+        function openDropdown() {
+            profileDropdown.classList.add('active');
+            profileTrigger.classList.add('active');
+            dropdownOverlay.classList.add('active');
+        }
+
+        function closeDropdown() {
+            profileDropdown.classList.remove('active');
+            profileTrigger.classList.remove('active');
+            dropdownOverlay.classList.remove('active');
+        }
+
+        // Close dropdown when clicking overlay
+        dropdownOverlay.addEventListener('click', closeDropdown);
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!profileTrigger.contains(e.target) && !profileDropdown.contains(e.target)) {
+                closeDropdown();
+            }
+        });
+
+        // Navigation functions
+        function navigateTo(page) {
+            closeDropdown();
+            alert(`Navigasi ke halaman: ${page}\n\nFitur ini akan mengarahkan ke halaman ${page}.`);
+            // window.location.href = `${page}.html`;
+        }
+
+        function handleLogout() {
+            const confirm = window.confirm('Apakah Anda yakin ingin keluar?');
+            if (confirm) {
+                alert('Anda telah keluar dari akun.\n\nAnda akan diarahkan ke halaman login.');
+                // Clear session/localStorage
+                // localStorage.removeItem('userSession');
+                // window.location.href = 'Login.html';
+            }
+            closeDropdown();
+        }
+
+        // Initialize on load
+        window.addEventListener('DOMContentLoaded', initializeProfile);
+
+        // Simulate loading user data from localStorage (after login)
+        function loadUserFromStorage() {
+            const storedUser = localStorage.getItem('currentUser');
+            if (storedUser) {
+                const user = JSON.parse(storedUser);
+                Object.assign(userData, user);
+                initializeProfile();
+            }
+        }
+
+        // Example: Save user data after login
+        function saveUserAfterLogin(name, email, avatar = null) {
+            const user = { name, email, avatar, status: "Premium Member" };
+            localStorage.setItem('currentUser', JSON.stringify(user));
+            Object.assign(userData, user);
+            initializeProfile();
+        }
+
+        // Uncomment to load from localStorage
+        // loadUserFromStorage();
+    </script>
+</body>
+</html>
